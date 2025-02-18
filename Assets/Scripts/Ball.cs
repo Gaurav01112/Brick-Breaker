@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ball : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class Ball : MonoBehaviour
     {
         if (PaddleManager.Instance.isBallReleased == true)
         {
-            
+
             if (collision.gameObject.tag == "Paddle")
             {
                 float BallPosition = collision.GetContact(0).point.x;
@@ -67,9 +68,9 @@ public class Ball : MonoBehaviour
             }
             if (collision.gameObject.tag == "BottomSide")
             {
-                if(BallManager.Instance.FirstBall == null || BallManager.Instance.SecondBall == null)
+                if (BallManager.Instance.FirstBall == null || BallManager.Instance.SecondBall == null)
                 {
-                    Debug.Log("GameOver");
+                    SceneManager.LoadScene("BrickBreaker");
                 }
                 Destroy(this.gameObject);
             }
