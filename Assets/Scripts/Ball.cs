@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    [SerializeField] private AudioSource ballHit;
     Rigidbody2D body;
     private void Start()
     {
         body = GetComponent<Rigidbody2D>();
+        ballHit = GetComponent<AudioSource>();
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (PaddleManager.Instance.isBallReleased == true)
         {
+            
             if (collision.gameObject.tag == "Paddle")
             {
                 float BallPosition = collision.GetContact(0).point.x;
@@ -23,6 +26,7 @@ public class Ball : MonoBehaviour
                 //Debug.Log("Difference = BallPostion - PaddlePosition  ::  " + Difference);
                 Vector2 Direction = new Vector2(Difference, 1).normalized;
                 body.velocity = Direction * body.velocity.magnitude;
+                ballHit.PlayOneShot(ballHit.clip);
             }
             if (collision.gameObject.tag == "RightSide")
             {
@@ -33,6 +37,7 @@ public class Ball : MonoBehaviour
                 //Debug.Log("NewDirection  ::  " + newDirection);
                 newDirection = Quaternion.Euler(0, 0, Random.Range(-10, 10)) * newDirection;
                 body.velocity = newDirection * body.velocity.magnitude;
+                ballHit.PlayOneShot(ballHit.clip);
             }
             if (collision.gameObject.tag == "LeftSide")
             {
@@ -45,6 +50,7 @@ public class Ball : MonoBehaviour
                 //Debug.Log("NewDirection  ::  " + newDirection);                
                 newDirection = Quaternion.Euler(0, 0, Random.Range(-10, 10)) * newDirection;
                 body.velocity = newDirection * body.velocity.magnitude;
+                ballHit.PlayOneShot(ballHit.clip);
             }
             if (collision.gameObject.tag == "TopSide")
             {
@@ -56,6 +62,7 @@ public class Ball : MonoBehaviour
                 //Debug.Log(newDirection);
                 newDirection = Quaternion.Euler(0, 0, Random.Range(-10, 10)) * newDirection;
                 body.velocity = newDirection * body.velocity.magnitude;
+                ballHit.PlayOneShot(ballHit.clip);
                 //Debug.Log(newDirection);
             }
             if (collision.gameObject.tag == "BottomSide")

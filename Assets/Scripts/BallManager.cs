@@ -43,9 +43,14 @@ public class BallManager : MonoBehaviour
         GameObject.Find("BrickCount").GetComponent<TextMeshProUGUI>().text = BrickCount.ToString();
         if (BrickCount == 0)
         {
-            Time.timeScale = 0;
-            WinPanel.gameObject.SetActive(true);
+            StartCoroutine(ShowWinPanel());                        
         }
+    }
+    private IEnumerator ShowWinPanel()
+    {
+        yield return new WaitForSeconds(0.3f);
+        Time.timeScale = 0;
+        WinPanel.gameObject.SetActive(true);
     }
     public void Nextbutton()
     {

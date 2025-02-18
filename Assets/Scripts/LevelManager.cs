@@ -9,8 +9,9 @@ public class LevelManager : MonoBehaviour
     public GameObject LevelButtonPrefab;
     public Transform ButtonParent;
     public int LevelButtonCount;
-    public GameObject HomePanel, LevelPanel;    
+    public GameObject HomePanel, LevelPanel, SettingPanel;
 
+    [SerializeField] private Toggle musicToggle;
     private void Awake()
     {
         if (PlayerPrefs.HasKey("Level") == false)
@@ -20,21 +21,30 @@ public class LevelManager : MonoBehaviour
         else
         {
             PlayerPrefs.GetInt("Level");
-        }        
+        }
     }
     // Start is called before the first frame update
     void Start()
     {
+        bool isMusicOn = PlayerPrefs.GetInt("MusicToggle", 1) == 1;
+        musicToggle.isOn = isMusicOn;
+        MusicManager.instance.musicSource.mute = !isMusicOn;
+
+        // Add listener to toggle change
+        musicToggle.onValueChanged.AddListener(OnMusicToggleClick);
+
         if (DDOL.Instance.isLevelPlayed == true)
         {
             HomePanel.SetActive(false);
             LevelPanel.SetActive(true);
+            SettingPanel.SetActive(false);
             LevelBtnGenerate();
         }
         else
         {
             HomePanel.SetActive(true);
             LevelPanel.SetActive(false);
+            SettingPanel.SetActive(false);
         }
     }
     public void PlayBtn()
@@ -42,6 +52,19 @@ public class LevelManager : MonoBehaviour
         HomePanel.gameObject.SetActive(false);
         LevelPanel.gameObject.SetActive(true);
         LevelBtnGenerate();
+    }
+    public void SettingBtn()
+    {
+        HomePanel.SetActive(false);
+        LevelPanel.SetActive(false);
+        SettingPanel.SetActive(true);
+    }
+    public void CloseSetting()
+    {
+
+        HomePanel.SetActive(true);
+        LevelPanel.SetActive(false);
+        SettingPanel.SetActive(false);
     }
     public void LevelBtnGenerate()
     {
@@ -62,9 +85,12 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
-    // Update is called once per frame
-    void Update()
+    private void OnMusicToggleClick(bool isOn)
     {
+        MusicManager.instance.musicSource.mute = !isOn;
 
+        // Save state in PlayerPrefs
+        PlayerPrefs.SetInt("MusicToggle", isOn ? 1 : 0);
+        PlayerPrefs.Save();
     }
 }
